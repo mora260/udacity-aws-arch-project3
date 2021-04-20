@@ -1,0 +1,14 @@
+# Identify 2-3 changes that can be made to our environment to prevent an ssh brute force attack from the internet.
+
+1. Move the Application EC2 instance to a private subnet
+2. Enable specific port rules in the Network Access Control List
+3. VPC default ingress and egress traffic is completely restricted, with few exceptions to guarantee operation of the application.
+4. Only allow connections to the instance from a trusted security group and trusted private IP range.
+
+# Neither instance should have had access to the secret recipes bucket, in the even that instance API credentials were compromised how could we have prevented access to sensitive data.
+
+2. We can:
+  a. Limit the role permissions to only have read access to the specific wanted bucket (free recipes) instead of all S3 permissions
+  over all the S3 resources
+  b. Use server side encryption with specific managed AWS KMS keys in the secret bucket
+  So that even with overpermissive policies, only roles that have the right usage permissions to the key can access the bucket

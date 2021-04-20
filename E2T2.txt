@@ -1,0 +1,34 @@
+Some of the vulnerabilities found by the services that are related to the project infrastructure are:
+
+1. Ensure no security groups allow ingress from 0.0.0.0/0 to port 22
+2. Ensure no security groups allow ingress from 0.0.0.0/0 to port 3389
+3. securityhub-ec2-instance-no-public-ip-66cb67c5
+
+Conclusion: EC2 instance in public subnet with deficient traffic rules: this leaves the instance in a highly insecure environment
+since all ports are accessible from the internet leaving a very big surface are exposed to attacks.
+
+Improvements: put the instance in a private subnet and only allow specific traffic: from a given security group, only available in
+the ports that are strictly needed and over a reduced IP range of the trusted subnet and security group.
+
+4. Ensure the default security group of every VPC restricts all traffic
+Conclusion: not having this set up in all VPC will make the VPC a lot less secure than it should be. 
+Improvements: Make changes so that all VPCs have a restricted traffic and only some explicit exceptions for the application intended
+use.
+
+5. S3 bucket server side encryption
+
+Conclusion: the bucket has no server side encryption, even not the default one.
+Improvements: enable at least default server side encryption, or better, KMS encryption.
+
+6. securityhub-ec2-ebs-encryption-by-default-a56f8d6b
+Conclusion: EBS encryption should be enabled for all EC2 instances.
+Improvements: enable EBS encryption for the instances.
+
+
+Not directly related with the infrastructure but useful:
+
+Ensure a log metric filter and alarm exist for security group changes
+Ensure a log metric filter and alarm exist for S3 bucket policy changes
+Ensure a log metric filter and alarm exist for IAM policy changes
+
+With this alarms in place, a change done by the attacker to bucket polcies, or security groups can be quickly spotted and countered.

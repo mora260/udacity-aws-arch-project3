@@ -1,0 +1,60 @@
+# Identify tools that will allow you to do the following:
+
+## Scan infrastructure as code templates
+
+- checkov
+- Regula: open policy agent
+- Terrascan (Accurics)
+- TFLint
+
+### Example vulnerability
+
+- S3 not having encryption, versioning, access logging or public access configurations
+- EC2 instances vulnerable ports
+- RDS instances in inappropiate subnets (public)
+- Hardcoded api keys
+- Enforce best practices: naming conventions, syntax, find errors (for example illegal instance names),
+  deprecated syntax, unused declarations, etc.
+
+##Scan AMI’s or containers for OS vulnerabilities
+
+- Clair
+- Aqua Security
+- Anchore
+- Falco
+- Docker Bench
+- Docker Scan
+
+### Example vulnerability
+
+- Indexing, matching and notifying about OS vulnerabilities (clair):
+  for example in debian 9:
+    {
+      "Name":"CVE-2018-6954",
+      "NamespaceName":"debian:9",
+      "Description":"systemd-tmpfiles in systemd through 237 mishandles symlinks present in non-terminal path components, which allows local users to obtain ownership of arbitrary files via vectors involving creation of a directory and a file under that directory, and later replacing that directory with a symlink. This occurs even if the fs.protected_symlinks sysctl is turned on.",
+      "Link":"https://security-tracker.debian.org/tracker/CVE-2018-6954",
+      "Severity":"High"
+    }
+- Identify vulnerabilities by image layer: outdated libraries with exploits can be detected and updated before the usage of an image
+- Check for container image authenticity
+
+##Scan an AWS environment for cloud configuration vulnerabilities
+
+- AWS Config
+- AWS Inspector
+- AWS Security Hub
+- Prowler
+- Cloudspoit
+- Fugue
+
+### Example vulnerability
+
+- Overpermissive policies
+- S3 encryption disabled, no versioning, no logging
+- Cloudtrail not in all regions, not alarms
+- EC2 instances with exposed ports or in public subnets
+- EC2 instances permitting SSH over the internet
+- EBS not encrypted
+- RDS instances outside of private subnets
+- Multifactor authentication not enabled

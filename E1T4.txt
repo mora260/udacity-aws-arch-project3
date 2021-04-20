@@ -1,0 +1,26 @@
+Poor practices:
+
+1. The policy attached to the EC2 instance called InstanceRolePolicy-C3 is allowing all operations in S3 over all S3 buckets.
+
+- PolicyName: InstanceRolePolicy-C3
+  PolicyDocument:
+    Version: 2012-10-17
+    Statement:
+      - Effect: Allow
+        Action: 's3:*'
+        Resource: '*'
+
+This is a really bad practice since this instance will have overpermissive permissions in S3, increasing the risk of unwanted
+information from other buckets to be read, written or even deleted. 
+
+This instance objective is only to retrieve recipes from a specific S3 bucket, so the policy shouldonly allow read permissions
+(or maybe listing also) from that specific bucket. In this case the bucket with key BucketNameRecipesFree.
+
+Changing this will make that even if an attacker gains control of the instance, the attacker will only be able to read from the free
+recipe bucket that was information that was actually public from the start, so it is not that bad.
+
+2. The S3 buckets are not using any type of encryption, not even the default server side encrytion. In this case the default server side
+encryption wouldn't be useful because of the overpermissive policy in S3, but is better than no encrytion at all, since object in the bucket
+may also be public because there is no specification to be a private accessed bucket. A better approach is to have the secret recipe
+bucket use an AWS KMS key that only specific trusted roles with MFA may use. So that even gaining control over the instance with the
+overpermissive policy will not be enough to access the secret recipe bucket data.

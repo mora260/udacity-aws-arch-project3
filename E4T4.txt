@@ -1,0 +1,25 @@
+1. What additional architectural change can be made to reduce the internet-facing attack surface of the web application instance.
+
+We can put the instance in a private subnet, with no direct access from the internet. This will minimize internet-facing attack surface.
+Only resources in VPC with the right security groups and NACL will be able to communicate with the instance.
+
+2. Assuming the IAM permissions for the S3 bucket are still insecure, would creating VPC private endpoints for S3 prevent the unauthorized access to the secrets bucket.
+
+No, without changing the IAM permissions in the role, even when creating a VPC private endpoint to S3, will not secure the bucket.
+
+3. Will applying default encryption setting to the s3 buckets encrypt the data that already exists?
+
+No. Data written to the bucket previous to the default encryption enable event will be kept unencrypted. Nonetheless, reading and 
+rewriting the same objects back to the bucket, will encrypt them.
+
+4. The changes you made above were done through the console or CLI; describe the outcome if the original cloud formation templates are applied to this environment?
+
+If no modifications are made to the commands, we will get an AlreadyExistsException, since the especified stack already exists.
+If changing the command to a different stack name, it will start but soon a rollback will be performed because some of the exported
+names from the resources collide.
+
+For the scripts to run appropriately again and get a new configuration (completely new resources), naming conventions should be applyed.
+Or previous stacks should be removed.
+
+To update the configuration of the cloudformation a drift detection must be made. Importing policies should be established as retain
+for the resources that must be maintained. Unused parameters and outputs should be updated accordingly.
